@@ -2,7 +2,7 @@ export const DENTAL_SERVICES = [
   {
     id: "crown-and-bridge",
     name: "Crown & Bridge",
-    turnaround: "24-48 hours",
+    turnaround: "24 hours",
     description: "High-precision monolithic zirconia, e.max, and multi-unit bridge CAD designs.",
   },
   {

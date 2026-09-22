@@ -1,6 +1,8 @@
+"use client";
+
+import { useEffect, useState, use } from "react";
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ArrowLeft, Calendar, FileText, User, Sparkles, Clock, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Calendar, Sparkles, Clock, CheckCircle2 } from "lucide-react";
 import { PortalHeader } from "@/components/portal/header";
 import { StatusBadge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -8,20 +10,63 @@ import { FileListView } from "@/components/portal/file-list-view";
 import { fetchCaseById } from "@/lib/services/cases";
 import { fetchFilesByCaseId } from "@/lib/services/files";
 import { formatDate, formatDateTime } from "@/lib/utils";
+import type { Case, CaseFile } from "@/lib/types";
 
 interface CaseDetailPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function CustomerCaseDetailPage({ params }: CaseDetailPageProps) {
-  const { id } = await params;
-  const targetCase = await fetchCaseById(id);
+export default function CustomerCaseDetailPage({ params }: CaseDetailPageProps) {
+  const resolvedParams = use(params);
+  const id = resolvedParams.id;
 
-  if (!targetCase) {
-    notFound();
+  const [targetCase, setTargetCase] = useState<Case | null>(null);
+  const [files, setFiles] = useState<CaseFile[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadData() {
+      setIsLoading(true);
+      try {
+        const [cData, fData] = await Promise.all([
+          fetchCaseById(id),
+          fetchFilesByCaseId(id),
+        ]);
+        setTargetCase(cData);
+        setFiles(fData);
+      } catch (err) {
+        console.error("Failed to load case", err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+    loadData();
+  }, [id]);
+
+  if (isLoading) {
+    return (
+      <div className="py-20 text-center text-slate-400 text-sm">
+        Loading case details...
+      </div>
+    );
   }
 
-  const files = await fetchFilesByCaseId(id);
+  if (!targetCase) {
+    return (
+      <div className="py-16 text-center space-y-4 glass-panel rounded-2xl border border-slate-800 max-w-xl mx-auto my-8">
+        <h3 className="text-lg font-bold text-white">Case Not Found</h3>
+        <p className="text-xs text-slate-400">
+          The requested case could not be located or you may not have permission to view it.
+        </p>
+        <Link href="/dashboard/customer">
+          <Button variant="outline" size="sm" className="gap-2">
+            <ArrowLeft className="w-3.5 h-3.5" />
+            <span>Return to My Cases</span>
+          </Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto pb-12">

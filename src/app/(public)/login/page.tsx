@@ -50,16 +50,11 @@ function LoginForm() {
       });
 
       if (error) {
-        // If placeholder/offline, check if email corresponds to demo profiles
-        if (
-          error.message.includes("fetch") ||
-          error.message.includes("URL") ||
-          error.message.includes("Invalid login")
-        ) {
-          handleDemoRoleRouting(formData.email);
-          return;
-        }
-        setServerError(error.message);
+        setServerError(
+          error.message === "Invalid login credentials"
+            ? "Invalid email or password. Please check your credentials and try again."
+            : error.message
+        );
         return;
       }
 
@@ -72,9 +67,10 @@ function LoginForm() {
 
         const role = (profile as any)?.role || "customer";
         router.push(redirectPath || `/dashboard/${role}`);
+        router.refresh();
       }
-    } catch {
-      handleDemoRoleRouting(formData.email);
+    } catch (err: any) {
+      setServerError(err?.message || "An unexpected login error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
