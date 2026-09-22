@@ -70,7 +70,7 @@ export default function NewCasePage() {
     }
 
     setIsSubmitting(true);
-    setUploadProgressText("Creating case record...");
+    setUploadProgressText("Creating case record....");
 
     try {
       const supabase = createClient();
