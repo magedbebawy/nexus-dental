@@ -177,7 +177,7 @@ export default function HomePage() {
       <section className="py-16 bg-gradient-to-b from-transparent to-[#050811] border-t border-white/[0.06]">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
           <h2 className="text-3xl sm:text-4xl font-bold text-white tracking-tight">
-            Ready to Accelerate Your Practice's Digital Workflow?
+            Ready to Accelerate Your Practice&apos;s Digital Workflow?
           </h2>
           <p className="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
             Create your account today. No long-term contracts. Upload your first case in less than 2 minutes.

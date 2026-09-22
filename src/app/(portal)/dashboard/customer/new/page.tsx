@@ -26,16 +26,16 @@ import { createClient } from "@/lib/supabase/client";
 export default function NewCasePage() {
   const router = useRouter();
 
-  // Default tomorrow's date for due date
-  const tomorrow = new Date(Date.now() + 86400000 * 2)
-    .toISOString()
-    .split("T")[0];
-
-  const [formData, setFormData] = useState<NewCaseFormData>({
-    service: DENTAL_SERVICES[0].name,
-    patient_reference: "",
-    due_date: tomorrow,
-    instructions: "",
+  const [formData, setFormData] = useState<NewCaseFormData>(() => {
+    const defaultDueDate = new Date(Date.now() + 86400000 * 2)
+      .toISOString()
+      .split("T")[0];
+    return {
+      service: DENTAL_SERVICES[0].name,
+      patient_reference: "",
+      due_date: defaultDueDate,
+      instructions: "",
+    };
   });
 
   const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);

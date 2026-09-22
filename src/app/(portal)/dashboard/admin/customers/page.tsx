@@ -62,7 +62,7 @@ export default function AdminCustomersPage() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="p-12 text-center rounded-xl border border-slate-800 bg-[#090e1c] text-slate-400 text-sm">
-          No customer accounts found matching "{searchTerm}".
+          No customer accounts found matching &ldquo;{searchTerm}&rdquo;.
         </div>
       ) : (
         <div className="overflow-x-auto rounded-xl border border-slate-800 bg-[#090e1c]/80 shadow-xl">
