@@ -50,12 +50,12 @@ export default function DesignerCompletedCasesPage() {
       {/* Case Table */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-white">Delivered Designs</h2>
-          <span className="text-xs text-slate-400">{cases.length} Total</span>
+          <h2 className="text-base font-black text-slate-900 tracking-tight">Delivered Designs</h2>
+          <span className="text-xs text-slate-500 font-medium">{cases.length} Total</span>
         </div>
 
         {isLoading ? (
-          <div className="p-12 text-center text-slate-400 text-sm">
+          <div className="p-12 text-center text-slate-500 text-sm">
             Loading completed records...
           </div>
         ) : (

@@ -35,7 +35,13 @@ export default function ForgotPasswordPage() {
       });
 
       if (error && !error.message.includes("fetch")) {
-        setError(error.message);
+        if (error.message.toLowerCase().includes("rate limit")) {
+          setError(
+            "Too many reset requests sent to this email address. Please wait a few minutes before requesting another link, or check your inbox/spam for the email already sent."
+          );
+        } else {
+          setError(error.message);
+        }
         return;
       }
 

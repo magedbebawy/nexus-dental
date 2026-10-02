@@ -170,16 +170,16 @@ export default function AdminDashboardPage() {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse" />
-            <h2 className="text-base font-bold text-white">
+            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+            <h2 className="text-base font-black text-slate-900 tracking-tight">
               Cases Awaiting Assignment ({uploadedCases.length})
             </h2>
           </div>
-          <span className="text-xs text-slate-400">Triage incoming doctor scans</span>
+          <span className="text-xs text-slate-500 font-medium">Triage incoming doctor scans</span>
         </div>
 
         {isLoading ? (
-          <div className="p-8 text-center text-slate-400 text-xs">Loading queue...</div>
+          <div className="p-8 text-center text-slate-500 text-xs">Loading queue...</div>
         ) : (
           <CaseTable
             cases={uploadedCases}
@@ -194,10 +194,10 @@ export default function AdminDashboardPage() {
       {/* Recent Lab Activity */}
       <div className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-white">All Active Restorations</h2>
+          <h2 className="text-base font-black text-slate-900 tracking-tight">All Active Restorations</h2>
           <Link
             href="/dashboard/admin/cases"
-            className="text-xs font-semibold text-cyan-400 hover:underline"
+            className="text-xs font-bold text-[#008F66] hover:text-[#00C48C] transition-colors"
           >
             View Full Log &rarr;
           </Link>
