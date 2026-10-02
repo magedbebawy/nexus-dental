@@ -20,8 +20,18 @@ export default function ForgotPasswordPage() {
 
     try {
       const supabase = createClient();
+      // Prefer production domain so email links don't point to localhost
+      let siteUrl = window.location.origin;
+      if (
+        siteUrl.includes("localhost") &&
+        process.env.NEXT_PUBLIC_SITE_URL &&
+        !process.env.NEXT_PUBLIC_SITE_URL.includes("localhost")
+      ) {
+        siteUrl = process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
+      }
+
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
+        redirectTo: `${siteUrl}/auth/callback?next=/reset-password`,
       });
 
       if (error && !error.message.includes("fetch")) {
