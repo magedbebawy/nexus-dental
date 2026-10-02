@@ -2,74 +2,90 @@
 
 @layer base {
   :root {
-    --nexus-navy: #070c18;
-    --nexus-navy-light: #0d1527;
-    --nexus-slate: #15213b;
-    --nexus-border: rgba(255, 255, 255, 0.08);
-    --nexus-cyan: #06b6d4;
-    --nexus-blue: #0ea5e9;
-    --nexus-text: #f8fafc;
-    --nexus-muted: #94a3b8;
+    --nexus-bg: #ffffff;
+    --nexus-bg-subtle: #f8faf9;
+    --nexus-card: #ffffff;
+    --nexus-border: #e2e8f0;
+    --nexus-mint: #00c48c;
+    --nexus-mint-hover: #00a876;
+    --nexus-mint-light: #e8f8f2;
+    --nexus-mint-dark: #007a55;
+    --nexus-text-main: #0f172a;
+    --nexus-text-muted: #64748b;
   }
 
   body {
-    background-color: #070c18;
-    color: #f8fafc;
+    background-color: #ffffff;
+    color: #0f172a;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/* Custom scrollbars */
+/* Custom scrollbars - Light & Clean */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: rgba(13, 21, 39, 0.5);
+  background: #f1f5f9;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.2);
+  background: #cbd5e1;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(14, 165, 233, 0.4);
+  background: #00c48c;
 }
 
-/* Glassmorphism panel styles */
+/* Mint Mobile Card / Panel styles (Light Mode) */
 .glass-panel {
-  background: rgba(13, 21, 39, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
 }
 
 .glass-panel-hover {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-hover:hover {
-  border-color: rgba(6, 182, 212, 0.3);
-  box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.12);
+  border-color: #00c48c;
+  box-shadow: 0 10px 25px -5px rgba(0, 196, 140, 0.15), 0 8px 10px -6px rgba(0, 196, 140, 0.08);
+  transform: translateY(-2px);
 }
 
-/* Subtle dental grid pattern */
-.bg-dental-grid {
+/* Mint Mobile Card active style */
+.mint-card-highlight {
+  border-color: #00c48c;
+  box-shadow: 0 4px 20px -2px rgba(0, 196, 140, 0.18);
+}
+
+/* Subtle pattern */
+.bg-mint-grid {
   background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 196, 140, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 196, 140, 0.04) 1px, transparent 1px);
 }
 
-/* Glow effects */
-.glow-cyan {
-  box-shadow: 0 0 35px -5px rgba(6, 182, 212, 0.25);
+/* Helpers */
+.text-mint {
+  color: #00c48c;
 }
 
-.glow-blue {
-  box-shadow: 0 0 35px -5px rgba(14, 165, 233, 0.25);
+.bg-mint {
+  background-color: #00c48c;
+}
+
+.bg-mint-light {
+  background-color: #e8f8f2;
+}
+
+.border-mint {
+  border-color: #00c48c;
 }

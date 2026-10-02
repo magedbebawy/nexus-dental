@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Download, File, CheckCircle2, Clock, Loader2 } from "lucide-react";
+import { Download, File, Loader2 } from "lucide-react";
 import { formatFileSize, formatDateTime } from "@/lib/utils";
 import { getSecureDownloadUrl } from "@/lib/services/files";
 import type { CaseFile } from "@/lib/types";
@@ -44,16 +44,16 @@ export function FileListView({ files }: FileListViewProps) {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full ${badgeColor}`} />
-          <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200">
+          <span className={`w-2.5 h-2.5 rounded-full ${badgeColor}`} />
+          <h4 className="text-xs font-black uppercase tracking-wider text-slate-800">
             {title} ({fileGroup.length})
           </h4>
         </div>
       </div>
 
       {fileGroup.length === 0 ? (
-        <div className="p-4 rounded-xl border border-dashed border-slate-800 bg-[#0a1020]/40 text-center">
-          <p className="text-xs text-slate-500">{emptyMessage}</p>
+        <div className="p-5 rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-center">
+          <p className="text-xs text-slate-500 font-medium">{emptyMessage}</p>
         </div>
       ) : (
         <div className="grid gap-2">
@@ -66,24 +66,24 @@ export function FileListView({ files }: FileListViewProps) {
             return (
               <div
                 key={file.id}
-                className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800 bg-[#0c1425]/60 hover:border-slate-700/80 transition-all group"
+                className="flex items-center justify-between p-3.5 rounded-2xl border border-slate-200 bg-white hover:border-[#00C48C] transition-all group shadow-xs"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400 shrink-0">
+                  <div className="p-2.5 rounded-xl bg-[#E8F8F2] text-[#008F66] shrink-0">
                     <File className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-medium text-white text-xs sm:text-sm truncate">
+                      <p className="font-bold text-slate-900 text-xs sm:text-sm truncate">
                         {file.file_name}
                       </p>
                       {is3D && (
-                        <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-cyan-950 text-cyan-400 border border-cyan-800/40 shrink-0">
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-mono font-bold bg-[#E8F8F2] text-[#008F66] border border-[#B6EAD5] shrink-0">
                           3D CAD
                         </span>
                       )}
                     </div>
-                    <div className="flex items-center gap-3 text-[11px] text-slate-400 mt-0.5">
+                    <div className="flex items-center gap-3 text-[11px] text-slate-500 mt-0.5 font-medium">
                       <span>{formatFileSize(file.file_size)}</span>
                       <span>•</span>
                       <span>Uploaded {formatDateTime(file.created_at)}</span>
@@ -95,7 +95,7 @@ export function FileListView({ files }: FileListViewProps) {
                   type="button"
                   onClick={() => handleDownload(file)}
                   disabled={isDownloading}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 text-slate-200 text-xs font-semibold hover:bg-cyan-500 hover:text-slate-950 transition-all duration-150 shrink-0 cursor-pointer disabled:opacity-50"
+                  className="flex items-center gap-1.5 px-4 py-2 rounded-full bg-slate-100 text-slate-800 text-xs font-bold hover:bg-[#00C48C] hover:text-white transition-all duration-150 shrink-0 cursor-pointer disabled:opacity-50 shadow-xs"
                   title="Download File"
                 >
                   {isDownloading ? (
@@ -119,17 +119,17 @@ export function FileListView({ files }: FileListViewProps) {
     <div className="space-y-6">
       {/* Customer Files Section */}
       {renderFileBlock(
-        "Customer Files",
+        "Customer Clinical Scans",
         customerFiles,
-        "bg-sky-400",
+        "bg-sky-500",
         "No patient scan or prescription files were uploaded."
       )}
 
       {/* Designer Files Section */}
       {renderFileBlock(
-        "Completed Design Files",
+        "Completed CAD Design Deliverables",
         designerFiles,
-        "bg-emerald-400",
+        "bg-[#00C48C]",
         "No finished CAD design files uploaded yet. Case is in progress."
       )}
     </div>

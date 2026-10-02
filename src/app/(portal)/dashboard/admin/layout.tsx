@@ -18,7 +18,7 @@ export default async function AdminDashboardLayout({
   const currentUserEmail = profile?.email || "nexusdigitaldentallab@gmail.com";
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-[#070c18]">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-[#F8FAFC]">
       <PortalSidebar
         role="admin"
         userName={currentUserName}

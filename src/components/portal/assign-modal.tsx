@@ -5,6 +5,7 @@ import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
 import { assignDesignerToCase } from "@/lib/services/cases";
+import { notifyDesignerAssigned } from "@/lib/actions/email";
 import type { Case, Profile } from "@/lib/types";
 
 interface AssignModalProps {
@@ -36,6 +37,16 @@ export function AssignModal({
     try {
       const success = await assignDesignerToCase(targetCase.id, selectedDesignerId);
       if (success) {
+        // Trigger automated email to the designer
+        try {
+          await notifyDesignerAssigned({
+            caseId: targetCase.id,
+            designerId: selectedDesignerId,
+          });
+        } catch (emailErr) {
+          console.warn("Designer notification email error:", emailErr);
+        }
+
         onAssigned();
         onClose();
       } else {
@@ -66,19 +77,19 @@ export function AssignModal({
           onChange={(e) => setSelectedDesignerId(e.target.value)}
           required
         >
-          <option value="" disabled className="bg-[#0b1329] text-slate-400">
+          <option value="" disabled className="text-slate-400">
             Choose a designer...
           </option>
           {designers.map((d) => (
-            <option key={d.id} value={d.id} className="bg-[#0b1329] text-white">
+            <option key={d.id} value={d.id} className="text-slate-900">
               {d.name} ({d.email})
             </option>
           ))}
         </Select>
 
-        {error && <p className="text-xs text-rose-400 font-medium">{error}</p>}
+        {error && <p className="text-xs text-rose-600 font-medium">{error}</p>}
 
-        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
           <Button
             type="button"
             variant="ghost"

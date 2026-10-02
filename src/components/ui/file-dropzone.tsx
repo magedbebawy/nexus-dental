@@ -85,11 +85,11 @@ export function FileDropzone({
       <div className="flex items-center justify-between">
         <label
           htmlFor={inputId}
-          className="block text-xs font-semibold tracking-wide uppercase text-slate-300"
+          className="block text-xs font-bold tracking-wide uppercase text-slate-700"
         >
           {label}
         </label>
-        <span className="text-xs text-slate-400">
+        <span className="text-xs text-slate-500 font-medium">
           {selectedFiles.length}/{maxFiles} files
         </span>
       </div>
@@ -111,11 +111,11 @@ export function FileDropzone({
         }}
         onClick={() => fileInputRef.current?.click()}
         className={cn(
-          "relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-xl border-2 border-dashed cursor-pointer transition-all duration-200 text-center",
-          "bg-[#0c1425]/50 hover:bg-[#0f1b33]/60",
+          "relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-200 text-center shadow-xs",
+          "bg-[#F8FAF9] hover:bg-[#F0FAF5]",
           isDragOver
-            ? "border-cyan-400 bg-cyan-950/20 scale-[0.99]"
-            : "border-slate-700/80 hover:border-slate-600"
+            ? "border-[#00C48C] bg-[#E8F8F2] scale-[0.99]"
+            : "border-slate-300 hover:border-[#00C48C]"
         )}
       >
         <input
@@ -128,15 +128,15 @@ export function FileDropzone({
           onChange={(e) => handleFiles(e.target.files)}
         />
 
-        <div className="w-12 h-12 rounded-full bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mb-3 text-cyan-400 shadow-inner">
+        <div className="w-12 h-12 rounded-full bg-[#E8F8F2] border border-[#B6EAD5] flex items-center justify-center mb-3 text-[#008F66] shadow-xs">
           <UploadCloud className="w-6 h-6" />
         </div>
 
-        <p className="text-sm font-medium text-white mb-1">
-          <span className="text-cyan-400 hover:underline">Click to browse</span> or drag and drop scanner files
+        <p className="text-sm font-bold text-slate-900 mb-1">
+          <span className="text-[#008F66] hover:underline">Click to browse</span> or drag and drop scanner files
         </p>
 
-        <p className="text-xs text-slate-400 max-w-sm mb-3">
+        <p className="text-xs text-slate-500 max-w-sm mb-3">
           Dental 3D Models (STL, OBJ, PLY), CBCT DICOM Archives (ZIP), Rx (PDF, Images) up to 100MB
         </p>
 
@@ -145,7 +145,7 @@ export function FileDropzone({
           {ALLOWED_FILE_EXTENSIONS.map((ext) => (
             <span
               key={ext}
-              className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-800 text-slate-300 border border-slate-700"
+              className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-white text-slate-700 border border-slate-200 shadow-xs"
             >
               {ext.replace(".", "")}
             </span>
@@ -154,7 +154,7 @@ export function FileDropzone({
       </div>
 
       {errorMessage && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs">
+        <div className="flex items-center gap-2 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-semibold">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{errorMessage}</span>
         </div>
@@ -163,25 +163,25 @@ export function FileDropzone({
       {/* Selected Files Preview List */}
       {selectedFiles.length > 0 && (
         <div className="space-y-2 pt-2">
-          <p className="text-xs font-medium text-slate-400">Selected Files Ready for Upload:</p>
+          <p className="text-xs font-bold text-slate-700">Selected Files Ready for Upload:</p>
           <div className="grid gap-2">
             {selectedFiles.map((f) => (
               <div
                 key={f.id}
-                className="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/60 border border-slate-800 text-sm hover:border-slate-700 transition-colors"
+                className="flex items-center justify-between p-3 rounded-xl bg-white border border-slate-200 text-sm hover:border-[#00C48C] transition-colors shadow-xs"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="p-1.5 rounded bg-cyan-500/10 text-cyan-400">
+                  <div className="p-2 rounded-lg bg-[#E8F8F2] text-[#008F66]">
                     <FileIcon className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
-                    <p className="font-medium text-white text-xs truncate max-w-xs sm:max-w-md">
+                    <p className="font-bold text-slate-900 text-xs truncate max-w-xs sm:max-w-md">
                       {f.name}
                     </p>
-                    <div className="flex items-center gap-2 text-[11px] text-slate-400">
+                    <div className="flex items-center gap-2 text-[11px] text-slate-500">
                       <span>{formatFileSize(f.size)}</span>
                       {f.isDental3D && (
-                        <span className="px-1.5 py-0.2 rounded bg-cyan-950 text-cyan-400 text-[10px] border border-cyan-800/40">
+                        <span className="px-1.5 py-0.2 rounded bg-[#E8F8F2] text-[#008F66] text-[10px] font-bold border border-[#B6EAD5]">
                           3D Scan
                         </span>
                       )}
@@ -190,14 +190,14 @@ export function FileDropzone({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-emerald-400" />
+                  <CheckCircle className="w-4 h-4 text-[#00C48C]" />
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       removeFile(f.id);
                     }}
-                    className="p-1 text-slate-400 hover:text-rose-400 rounded transition-colors"
+                    className="p-1 text-slate-400 hover:text-rose-500 rounded-lg transition-colors cursor-pointer"
                     title="Remove file"
                   >
                     <X className="w-4 h-4" />

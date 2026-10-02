@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/client";
+import { getServiceByName } from "@/lib/constants/dental";
 import type { Case, CaseStatus, UserRole } from "@/lib/types";
 
 // In-memory fallback mock storage for development/preview when Supabase URL is placeholder
@@ -9,6 +10,10 @@ const mockCases: Case[] = [
     customer_id: "u1111111-1111-1111-1111-111111111111",
     designer_id: null,
     service: "Crown & Bridge",
+    units: 1,
+    unit_price: 6,
+    total_price: 6,
+    admin_verified: false,
     patient_reference: "PT-DOE-789",
     due_date: new Date(Date.now() + 86400000 * 2).toISOString().split("T")[0],
     instructions: "Monolithic zirconia crown on tooth #19. High translucency, light staining on fissures.",
@@ -30,10 +35,14 @@ const mockCases: Case[] = [
     case_number: "NX-100002",
     customer_id: "u1111111-1111-1111-1111-111111111111",
     designer_id: "d2222222-2222-2222-2222-222222222222",
-    service: "Implant",
+    service: "Custom Abutment",
+    units: 1,
+    unit_price: 21,
+    total_price: 21,
+    admin_verified: true,
     patient_reference: "PT-SMITH-452",
     due_date: new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0],
-    instructions: "Custom titanium abutment with screw-retained ceramic crown for site #30. 4.5mm platform.",
+    instructions: "Custom titanium abutment with emergence profile for site #30. 4.5mm platform.",
     status: "assigned",
     created_at: new Date(Date.now() - 86400000 * 1).toISOString(),
     completed_at: null,
@@ -61,10 +70,14 @@ const mockCases: Case[] = [
     case_number: "NX-100003",
     customer_id: "u1111111-1111-1111-1111-111111111111",
     designer_id: "d2222222-2222-2222-2222-222222222222",
-    service: "Surgical Guide",
+    service: "Screw Retained",
+    units: 2,
+    unit_price: 18,
+    total_price: 36,
+    admin_verified: true,
     patient_reference: "PT-CHEN-881",
     due_date: new Date(Date.now() - 86400000 * 1).toISOString().split("T")[0],
-    instructions: "Pilot drill guide for anterior implant placement. CBCT scan aligned with optical model.",
+    instructions: "Screw-retained restorations for site #19 and #20. Optical model included.",
     status: "done",
     created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
     completed_at: new Date(Date.now() - 3600000 * 5).toISOString(),
@@ -161,16 +174,26 @@ export async function fetchCaseById(id: string): Promise<Case | null> {
 export async function createNewCase(params: {
   customer_id: string;
   service: string;
+  units?: number;
   patient_reference: string;
   due_date: string;
   instructions?: string;
 }): Promise<Case> {
+  const unitsCount = Math.max(1, Number(params.units) || 1);
+  const serviceDef = getServiceByName(params.service);
+  const unitPrice = serviceDef.unitPrice;
+  const totalPrice = unitPrice * unitsCount;
+
   try {
     const supabase = createClient();
     const { data, error } = await (supabase.from("cases") as any)
       .insert({
         customer_id: params.customer_id,
         service: params.service,
+        units: unitsCount,
+        unit_price: unitPrice,
+        total_price: totalPrice,
+        admin_verified: false,
         patient_reference: params.patient_reference,
         due_date: params.due_date,
         instructions: params.instructions || null,
@@ -191,6 +214,10 @@ export async function createNewCase(params: {
     customer_id: params.customer_id,
     designer_id: null,
     service: params.service,
+    units: unitsCount,
+    unit_price: unitPrice,
+    total_price: totalPrice,
+    admin_verified: false,
     patient_reference: params.patient_reference,
     due_date: params.due_date,
     instructions: params.instructions || null,
@@ -248,6 +275,79 @@ export async function markCaseAsDone(caseId: string): Promise<boolean> {
   if (target) {
     target.status = "done";
     target.completed_at = new Date().toISOString();
+    return true;
+  }
+  return false;
+}
+
+export async function reopenCase(caseId: string): Promise<boolean> {
+  try {
+    const supabase = createClient();
+    const { error } = await (supabase.from("cases") as any)
+      .update({
+        status: "assigned",
+        completed_at: null,
+      })
+      .eq("id", caseId);
+
+    if (error) throw error;
+    return true;
+  } catch {
+    // Fallback
+  }
+
+  const target = mockCases.find((c) => c.id === caseId);
+  if (target) {
+    target.status = "assigned";
+    target.completed_at = null;
+    return true;
+  }
+  return false;
+}
+
+export async function updateCaseUnitsAndPrice(
+  caseId: string,
+  units: number,
+  unitPrice?: number
+): Promise<boolean> {
+  const unitsCount = Math.max(1, Number(units) || 1);
+
+  try {
+    const supabase = createClient();
+    // First get current case if unitPrice not provided
+    let calculatedUnitPrice = unitPrice;
+    if (calculatedUnitPrice === undefined) {
+      const { data: c } = await (supabase.from("cases") as any)
+        .select("service, unit_price")
+        .eq("id", caseId)
+        .single();
+      calculatedUnitPrice = c?.unit_price || getServiceByName(c?.service || "")?.unitPrice || 6;
+    }
+
+    const pricePerUnit = calculatedUnitPrice ?? 6;
+    const calculatedTotal = pricePerUnit * unitsCount;
+
+    const { error } = await (supabase.from("cases") as any)
+      .update({
+        units: unitsCount,
+        unit_price: pricePerUnit,
+        total_price: calculatedTotal,
+        admin_verified: true,
+      })
+      .eq("id", caseId);
+
+    if (error) throw error;
+    return true;
+  } catch {
+    // Fallback
+  }
+
+  const target = mockCases.find((c) => c.id === caseId);
+  if (target) {
+    target.units = unitsCount;
+    if (unitPrice !== undefined) target.unit_price = unitPrice;
+    target.total_price = target.unit_price * unitsCount;
+    target.admin_verified = true;
     return true;
   }
   return false;

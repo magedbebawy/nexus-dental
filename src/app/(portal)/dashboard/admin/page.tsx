@@ -10,6 +10,8 @@ import {
   Palette,
   ArrowRight,
   ShieldCheck,
+  DollarSign,
+  Receipt,
 } from "lucide-react";
 import { PortalHeader } from "@/components/portal/header";
 import { CaseTable } from "@/components/portal/case-table";
@@ -17,11 +19,13 @@ import { AssignModal } from "@/components/portal/assign-modal";
 import { Button } from "@/components/ui/button";
 import { fetchCases } from "@/lib/services/cases";
 import { fetchProfilesByRole } from "@/lib/services/users";
+import { fetchCustomerBalanceSummaries, type CustomerBalanceSummary } from "@/lib/services/invoices";
 import type { Case, Profile } from "@/lib/types";
 
 export default function AdminDashboardPage() {
   const [cases, setCases] = useState<Case[]>([]);
   const [designers, setDesigners] = useState<Profile[]>([]);
+  const [balances, setBalances] = useState<CustomerBalanceSummary[]>([]);
   const [selectedCaseForAssign, setSelectedCaseForAssign] = useState<Case | null>(null);
   const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -29,12 +33,14 @@ export default function AdminDashboardPage() {
   const loadData = async () => {
     setIsLoading(true);
     try {
-      const [casesData, designersData] = await Promise.all([
+      const [casesData, designersData, balancesData] = await Promise.all([
         fetchCases({ role: "admin" }),
         fetchProfilesByRole("designer"),
+        fetchCustomerBalanceSummaries(),
       ]);
       setCases(casesData);
       setDesigners(designersData);
+      setBalances(balancesData);
     } catch (err) {
       console.error("Failed to load admin dashboard", err);
     } finally {
@@ -45,6 +51,11 @@ export default function AdminDashboardPage() {
   useEffect(() => {
     loadData();
   }, []);
+
+  const totalOutstandingOwed = balances.reduce(
+    (sum, b) => sum + (b.totalOutstandingOwed || 0),
+    0
+  );
 
   const uploadedCases = cases.filter((c) => c.status === "uploaded");
   const assignedCases = cases.filter((c) => c.status === "assigned");
@@ -59,7 +70,7 @@ export default function AdminDashboardPage() {
     <div className="space-y-8 max-w-7xl mx-auto pb-12">
       <PortalHeader
         title="Lab Operations Dashboard"
-        description="Monitor nationwide case intake, triage designer workloads, and maintain clinical QA."
+        description="Monitor nationwide case intake, triage designer workloads, and track accounts receivable."
         actions={
           <Link href="/dashboard/admin/cases">
             <Button variant="outline" size="sm" className="gap-1.5 text-xs">
@@ -70,50 +81,88 @@ export default function AdminDashboardPage() {
         }
       />
 
+      {/* Accounts Receivable & Billing Quick Banner */}
+      <div className="rounded-3xl p-6 border-2 border-[#00C48C] bg-[#F0FAF5] flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-[#E8F8F2] border border-[#B6EAD5] flex items-center justify-center text-[#008F66]">
+            <DollarSign className="w-6 h-6" />
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-black uppercase tracking-wider text-[#008F66]">
+                Customer Balances Owed
+              </span>
+              <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#E8F8F2] text-[#008F66] font-black border border-[#B6EAD5]">
+                Accounts Receivable
+              </span>
+            </div>
+            <div className="flex items-baseline gap-2 mt-0.5">
+              <span className="text-2xl sm:text-4xl font-black text-slate-900">
+                ${totalOutstandingOwed.toFixed(2)}
+              </span>
+              <span className="text-xs text-slate-600 font-medium">
+                total outstanding across all customer accounts
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <Link href="/dashboard/admin/invoices">
+          <Button
+            size="sm"
+            className="gap-2 text-xs font-black shadow-xs"
+          >
+            <Receipt className="w-3.5 h-3.5" />
+            <span>Manage Invoices &amp; Balances</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Button>
+        </Link>
+      </div>
+
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="p-5 rounded-xl border border-slate-800 bg-[#090e1c]/70 space-y-2">
-          <div className="flex items-center justify-between text-amber-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">
+        <div className="p-6 rounded-3xl border border-slate-200 bg-white space-y-2 shadow-xs">
+          <div className="flex items-center justify-between text-amber-600">
+            <span className="text-xs font-black uppercase tracking-wider">
               Pending Assignment
             </span>
             <Clock className="w-4 h-4" />
           </div>
-          <p className="text-3xl font-extrabold text-white">{uploadedCases.length}</p>
-          <p className="text-[11px] text-slate-400">Requires CAD technician assignment</p>
+          <p className="text-3xl sm:text-4xl font-black text-slate-900">{uploadedCases.length}</p>
+          <p className="text-xs text-slate-500 font-medium">Requires CAD technician assignment</p>
         </div>
 
-        <div className="p-5 rounded-xl border border-slate-800 bg-[#090e1c]/70 space-y-2">
-          <div className="flex items-center justify-between text-sky-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">
+        <div className="p-6 rounded-3xl border border-slate-200 bg-white space-y-2 shadow-xs">
+          <div className="flex items-center justify-between text-sky-600">
+            <span className="text-xs font-black uppercase tracking-wider">
               In CAD Design
             </span>
             <FolderKanban className="w-4 h-4" />
           </div>
-          <p className="text-3xl font-extrabold text-white">{assignedCases.length}</p>
-          <p className="text-[11px] text-slate-400">Assigned to active designers</p>
+          <p className="text-3xl sm:text-4xl font-black text-slate-900">{assignedCases.length}</p>
+          <p className="text-xs text-slate-500 font-medium">Assigned to active designers</p>
         </div>
 
-        <div className="p-5 rounded-xl border border-slate-800 bg-[#090e1c]/70 space-y-2">
-          <div className="flex items-center justify-between text-emerald-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">
+        <div className="p-6 rounded-3xl border border-slate-200 bg-white space-y-2 shadow-xs">
+          <div className="flex items-center justify-between text-[#008F66]">
+            <span className="text-xs font-black uppercase tracking-wider">
               Completed Cases
             </span>
             <CheckCircle2 className="w-4 h-4" />
           </div>
-          <p className="text-3xl font-extrabold text-white">{doneCases.length}</p>
-          <p className="text-[11px] text-slate-400">Validated and available to doctors</p>
+          <p className="text-3xl sm:text-4xl font-black text-slate-900">{doneCases.length}</p>
+          <p className="text-xs text-slate-500 font-medium">Validated and available to doctors</p>
         </div>
 
-        <div className="p-5 rounded-xl border border-slate-800 bg-[#090e1c]/70 space-y-2">
-          <div className="flex items-center justify-between text-purple-400">
-            <span className="text-xs font-semibold uppercase tracking-wider">
+        <div className="p-6 rounded-3xl border border-slate-200 bg-white space-y-2 shadow-xs">
+          <div className="flex items-center justify-between text-purple-600">
+            <span className="text-xs font-black uppercase tracking-wider">
               Active Designers
             </span>
             <Palette className="w-4 h-4" />
           </div>
-          <p className="text-3xl font-extrabold text-white">{designers.length}</p>
-          <p className="text-[11px] text-slate-400">Available on CAD design roster</p>
+          <p className="text-3xl sm:text-4xl font-black text-slate-900">{designers.length}</p>
+          <p className="text-xs text-slate-500 font-medium">Available on CAD design roster</p>
         </div>
       </div>
 

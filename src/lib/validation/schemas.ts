@@ -53,6 +53,12 @@ export type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 export const newCaseSchema = z.object({
   service: z.string().min(1, "Please select a dental service"),
+  units: z.coerce
+    .number()
+    .int("Units must be a whole number")
+    .min(1, "Minimum 1 unit required")
+    .max(32, "Maximum 32 units per case")
+    .default(1),
   patient_reference: z
     .string()
     .min(2, "Patient / Case reference is required (e.g. PT-104)")

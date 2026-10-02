@@ -15,7 +15,7 @@ export function StatusBadge({
 }: StatusBadgeProps) {
   const config = CASE_STATUS_CONFIG[status] || {
     label: status,
-    color: "bg-slate-800 text-slate-300 border-slate-700",
+    color: "bg-slate-100 text-slate-700 border-slate-200",
     dot: "bg-slate-400",
   };
 
@@ -47,16 +47,16 @@ export function Badge({
   className,
 }: BadgeProps) {
   const variants = {
-    default: "bg-slate-800 text-slate-200 border border-slate-700",
-    cyan: "bg-cyan-500/10 text-cyan-400 border border-cyan-500/30",
-    outline: "bg-transparent text-slate-300 border border-slate-700",
-    slate: "bg-slate-900/60 text-slate-400 border border-slate-800",
+    default: "bg-slate-100 text-slate-800 border border-slate-200 font-semibold",
+    cyan: "bg-[#E8F8F2] text-[#008F66] border border-[#B6EAD5] font-black",
+    outline: "bg-transparent text-slate-700 border border-slate-300 font-medium",
+    slate: "bg-slate-50 text-slate-600 border border-slate-200 font-medium",
   };
 
   return (
     <span
       className={cn(
-        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium",
+        "inline-flex items-center px-3 py-1 rounded-full text-xs",
         variants[variant],
         className
       )}

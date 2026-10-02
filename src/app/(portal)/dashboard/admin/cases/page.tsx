@@ -60,8 +60,8 @@ export default function AdminAllCasesPage() {
         ]}
       />
 
-      {/* Filter Tabs */}
-      <div className="flex flex-wrap items-center gap-2 p-1.5 rounded-xl bg-[#090e1c] border border-slate-800 w-fit">
+      {/* Filter Tabs - Mint Mobile Light Style */}
+      <div className="flex flex-wrap items-center gap-1.5 p-1.5 rounded-full bg-slate-100 border border-slate-200 w-fit">
         {filterTabs.map((tab) => {
           const isSelected = statusFilter === tab.value;
           return (
@@ -69,10 +69,10 @@ export default function AdminAllCasesPage() {
               key={tab.value}
               onClick={() => setStatusFilter(tab.value)}
               className={cn(
-                "px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 cursor-pointer",
+                "px-4 py-2 rounded-full text-xs font-black transition-all duration-150 cursor-pointer",
                 isSelected
-                  ? "bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 shadow-sm"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                  ? "bg-[#00C48C] text-white shadow-xs"
+                  : "text-slate-600 hover:text-slate-900"
               )}
             >
               {tab.label}

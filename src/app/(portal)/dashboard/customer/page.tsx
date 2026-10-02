@@ -47,40 +47,40 @@ export default function CustomerCasesPage() {
         }
       />
 
-      {/* Metric Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl border border-slate-800 bg-[#090e1c]/70 flex items-center justify-between">
+      {/* Metric Cards - Mint Mobile Clean Light Style */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+        <div className="p-6 rounded-3xl border border-slate-200 bg-white shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-amber-400">
+            <p className="text-xs font-black uppercase tracking-wider text-amber-600">
               Uploaded / Pending
             </p>
-            <p className="text-2xl font-bold text-white mt-1">{uploadedCount}</p>
+            <p className="text-3xl font-black text-slate-900 mt-1">{uploadedCount}</p>
           </div>
-          <div className="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 border border-amber-200/60 flex items-center justify-center">
             <Clock className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-xl border border-slate-800 bg-[#090e1c]/70 flex items-center justify-between">
+        <div className="p-6 rounded-3xl border border-slate-200 bg-white shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-sky-400">
+            <p className="text-xs font-black uppercase tracking-wider text-sky-600">
               In CAD Design
             </p>
-            <p className="text-2xl font-bold text-white mt-1">{assignedCount}</p>
+            <p className="text-3xl font-black text-slate-900 mt-1">{assignedCount}</p>
           </div>
-          <div className="w-10 h-10 rounded-lg bg-sky-500/10 text-sky-400 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 border border-sky-200/60 flex items-center justify-center">
             <FolderKanban className="w-5 h-5" />
           </div>
         </div>
 
-        <div className="p-4 rounded-xl border border-slate-800 bg-[#090e1c]/70 flex items-center justify-between">
+        <div className="p-6 rounded-3xl border border-slate-200 bg-white shadow-xs flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-400">
+            <p className="text-xs font-black uppercase tracking-wider text-[#008F66]">
               Completed / Ready
             </p>
-            <p className="text-2xl font-bold text-white mt-1">{doneCount}</p>
+            <p className="text-3xl font-black text-slate-900 mt-1">{doneCount}</p>
           </div>
-          <div className="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-[#E8F8F2] text-[#008F66] border border-[#B6EAD5] flex items-center justify-center">
             <CheckCircle2 className="w-5 h-5" />
           </div>
         </div>
@@ -89,8 +89,8 @@ export default function CustomerCasesPage() {
       {/* Cases Table */}
       <div className="space-y-3">
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-bold text-white">All Practice Cases</h2>
-          <span className="text-xs text-slate-400">{cases.length} Total</span>
+          <h2 className="text-base font-black text-slate-900">All Practice Cases</h2>
+          <span className="text-xs font-semibold text-slate-500">{cases.length} Total</span>
         </div>
 
         {isLoading ? (

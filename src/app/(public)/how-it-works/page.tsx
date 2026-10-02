@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle, ShieldCheck, Upload, UserCheck, Download } from "lucide-react";
+import { ArrowRight, CheckCircle, Upload, UserCheck, Download, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function HowItWorksPage() {
@@ -46,58 +46,59 @@ export default function HowItWorksPage() {
   ];
 
   return (
-    <div className="py-14 sm:py-20">
+    <div className="py-14 sm:py-20 bg-white">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto space-y-4">
-          <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">
-            Frictionless Case Lifecycle
-          </span>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F8F2] border border-[#B6EAD5] text-[#008F66] text-xs font-black uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5 text-[#00C48C]" />
+            <span>Frictionless Case Lifecycle</span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight">
             How Nexus Digital Lab Works
           </h1>
-          <p className="text-sm sm:text-base text-slate-400 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-normal">
             A transparent, predictable digital partnership built to simplify your lab operations and eliminate chairside delays.
           </p>
         </div>
 
         {/* Vertical Process Steps */}
-        <div className="space-y-12 relative">
-          {steps.map((step, idx) => {
+        <div className="space-y-8 relative">
+          {steps.map((step) => {
             const Icon = step.icon;
             return (
               <div
                 key={step.number}
-                className="glass-panel rounded-2xl p-6 sm:p-10 relative overflow-hidden border border-slate-800"
+                className="bg-white rounded-3xl p-6 sm:p-10 relative overflow-hidden border border-slate-200 shadow-sm hover:border-[#00C48C] hover:shadow-xl transition-all"
               >
                 <div className="flex flex-col md:flex-row md:items-start gap-6">
                   {/* Step Num Icon */}
-                  <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/25 flex items-center justify-center text-cyan-400 shrink-0">
-                    <Icon className="w-7 h-7" />
+                  <div className="w-14 h-14 rounded-2xl bg-[#E8F8F2] border border-[#B6EAD5] flex items-center justify-center text-[#008F66] shrink-0">
+                    <Icon className="w-7 h-7 text-[#00C48C]" />
                   </div>
 
                   <div className="flex-1 space-y-3">
                     <div className="flex flex-wrap items-center gap-3">
-                      <span className="text-xs font-mono font-bold text-cyan-400 px-2 py-0.5 rounded bg-cyan-950/80 border border-cyan-800/50">
+                      <span className="text-xs font-mono font-black text-[#008F66] px-2.5 py-0.5 rounded-full bg-[#E8F8F2] border border-[#B6EAD5]">
                         STEP {step.number}
                       </span>
-                      <span className="text-xs text-slate-400 font-medium">
+                      <span className="text-xs text-slate-500 font-bold">
                         {step.subtitle}
                       </span>
                     </div>
 
-                    <h2 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
+                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
                       {step.title}
                     </h2>
 
-                    <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                       {step.description}
                     </p>
 
-                    <div className="pt-3 grid sm:grid-cols-2 gap-2 text-xs text-slate-400">
+                    <div className="pt-3 grid sm:grid-cols-2 gap-2 text-xs text-slate-700 font-medium">
                       {step.bulletPoints.map((bp) => (
                         <div key={bp} className="flex items-center gap-2">
-                          <CheckCircle className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+                          <CheckCircle className="w-4 h-4 text-[#00C48C] shrink-0" />
                           <span>{bp}</span>
                         </div>
                       ))}
@@ -110,15 +111,15 @@ export default function HowItWorksPage() {
         </div>
 
         {/* CTA */}
-        <div className="p-8 rounded-2xl bg-gradient-to-r from-cyan-950/40 via-slate-900 to-sky-950/40 border border-cyan-500/20 text-center space-y-4">
-          <h3 className="text-xl font-bold text-white">Experience the Nexus Advantage</h3>
-          <p className="text-xs sm:text-sm text-slate-400 max-w-lg mx-auto">
+        <div className="p-8 sm:p-10 rounded-3xl bg-[#F0FAF5] border-2 border-[#00C48C] text-center space-y-4 shadow-xs">
+          <h3 className="text-2xl font-black text-slate-900">Experience the Nexus Advantage</h3>
+          <p className="text-xs sm:text-sm text-slate-600 max-w-lg mx-auto font-normal">
             Ready to test our turnaround and precision on your next clinical case? Create your customer account in seconds.
           </p>
           <div className="pt-2">
             <Link href="/register">
-              <Button size="lg" className="gap-2 text-sm">
-                <span>Register Practice & Upload Scans</span>
+              <Button size="lg" className="gap-2 text-sm font-black shadow-md shadow-emerald-500/20">
+                <span>Register Practice &amp; Upload Scans</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>

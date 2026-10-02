@@ -1,6 +1,7 @@
 export type UserRole = "customer" | "designer" | "admin";
 export type CaseStatus = "uploaded" | "assigned" | "done";
 export type FileCategory = "customer_file" | "designer_file";
+export type InvoiceStatus = "unpaid" | "paid" | "void";
 
 export interface Profile {
   id: string;
@@ -18,6 +19,11 @@ export interface Case {
   customer_id: string;
   designer_id: string | null;
   service: string;
+  units: number;
+  unit_price: number;
+  total_price: number;
+  admin_verified?: boolean;
+  invoice_id?: string | null;
   patient_reference: string;
   due_date: string;
   instructions: string | null;
@@ -43,6 +49,26 @@ export interface CaseFile {
   // Joined / runtime fields
   uploader?: Profile;
   download_url?: string;
+}
+
+export interface Invoice {
+  id: string;
+  invoice_number: string;
+  customer_id: string;
+  amount_due: number;
+  amount_paid: number;
+  status: InvoiceStatus;
+  billing_period_start: string;
+  billing_period_end: string;
+  due_date: string;
+  stripe_invoice_id?: string | null;
+  stripe_payment_url?: string | null;
+  paid_at?: string | null;
+  created_at: string;
+  updated_at: string;
+  // Joined fields
+  customer?: Profile;
+  cases?: Case[];
 }
 
 export interface Database {
@@ -77,6 +103,11 @@ export interface Database {
           customer_id: string;
           designer_id?: string | null;
           service: string;
+          units?: number;
+          unit_price?: number;
+          total_price?: number;
+          admin_verified?: boolean;
+          invoice_id?: string | null;
           patient_reference: string;
           due_date: string;
           instructions?: string | null;
@@ -90,6 +121,11 @@ export interface Database {
           customer_id?: string;
           designer_id?: string | null;
           service?: string;
+          units?: number;
+          unit_price?: number;
+          total_price?: number;
+          admin_verified?: boolean;
+          invoice_id?: string | null;
           patient_reference?: string;
           due_date?: string;
           instructions?: string | null;
@@ -121,6 +157,41 @@ export interface Database {
           file_size?: number;
           storage_path?: string;
           created_at?: string;
+        };
+      };
+      invoices: {
+        Row: Invoice;
+        Insert: {
+          id?: string;
+          invoice_number: string;
+          customer_id: string;
+          amount_due: number;
+          amount_paid?: number;
+          status?: InvoiceStatus;
+          billing_period_start: string;
+          billing_period_end: string;
+          due_date: string;
+          stripe_invoice_id?: string | null;
+          stripe_payment_url?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          invoice_number?: string;
+          customer_id?: string;
+          amount_due?: number;
+          amount_paid?: number;
+          status?: InvoiceStatus;
+          billing_period_start?: string;
+          billing_period_end?: string;
+          due_date?: string;
+          stripe_invoice_id?: string | null;
+          stripe_payment_url?: string | null;
+          paid_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
         };
       };
     };

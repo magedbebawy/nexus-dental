@@ -102,33 +102,33 @@ export default function RegisterPage() {
 
   return (
     <div className="py-12 sm:py-16 flex items-center justify-center px-4">
-      <div className="w-full max-w-md glass-panel rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-2xl">
+      <div className="w-full max-w-md rounded-3xl p-6 sm:p-8 border border-slate-200 bg-white shadow-xl">
         <div className="text-center space-y-2 mb-6">
-          <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">
+          <span className="text-xs font-black uppercase tracking-widest text-[#008F66]">
             Doctor Portal Access
           </span>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">
             Register Your Practice
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Create your customer account to begin submitting digital cases.
           </p>
         </div>
 
         {success ? (
           <div className="text-center py-8 space-y-3">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mx-auto">
-              <CheckCircle2 className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-[#E8F8F2] border border-[#B6EAD5] flex items-center justify-center text-[#008F66] mx-auto">
+              <CheckCircle2 className="w-7 h-7 text-[#00C48C]" />
             </div>
-            <h3 className="text-base font-bold text-white">Registration Successful!</h3>
-            <p className="text-xs text-slate-400">
+            <h3 className="text-base font-black text-slate-900">Registration Successful!</h3>
+            <p className="text-xs text-slate-500">
               Redirecting you to the Customer Dashboard...
             </p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {serverError && (
-              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
+              <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{serverError}</span>
               </div>
@@ -190,19 +190,19 @@ export default function RegisterPage() {
             <Button
               type="submit"
               size="lg"
-              className="w-full gap-2 text-sm mt-2"
+              className="w-full gap-2 text-sm mt-2 font-black"
               isLoading={isLoading}
             >
               <span>Create Customer Account</span>
               <ArrowRight className="w-4 h-4" />
             </Button>
 
-            <div className="pt-4 border-t border-slate-800 text-center">
-              <p className="text-xs text-slate-400">
+            <div className="pt-4 border-t border-slate-200 text-center">
+              <p className="text-xs text-slate-500 font-medium">
                 Already have an account?{" "}
                 <Link
                   href="/login"
-                  className="font-semibold text-cyan-400 hover:text-cyan-300"
+                  className="font-bold text-[#008F66] hover:text-[#00C48C]"
                 >
                   Sign In
                 </Link>

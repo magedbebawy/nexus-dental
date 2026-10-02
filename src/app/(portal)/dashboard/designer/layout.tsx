@@ -18,7 +18,7 @@ export default async function DesignerDashboardLayout({
   const currentUserEmail = profile?.email || "marcus.sterling@nexusdental.com";
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-[#070c18]">
+    <div className="flex flex-col lg:flex-row min-h-screen bg-[#F8FAFC]">
       <PortalSidebar
         role="designer"
         userName={currentUserName}

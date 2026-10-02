@@ -119,8 +119,8 @@ export default function AdminProfilePage() {
 
   if (isLoading) {
     return (
-      <div className="py-20 text-center text-slate-400 text-sm flex items-center justify-center gap-2">
-        <Loader2 className="w-4 h-4 animate-spin text-emerald-400" />
+      <div className="py-20 text-center text-slate-500 text-sm flex items-center justify-center gap-2">
+        <Loader2 className="w-4 h-4 animate-spin text-[#00C48C]" />
         <span>Loading administration profile...</span>
       </div>
     );
@@ -133,29 +133,29 @@ export default function AdminProfilePage() {
         description="System administration preferences and master lab contact records."
       />
 
-      <div className="glass-panel rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-xl">
+      <div className="rounded-3xl p-6 sm:p-8 border border-slate-200 bg-white shadow-xs">
         <form onSubmit={handleSubmit} className="space-y-5">
           {isSaved && (
-            <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs flex items-center gap-2">
+            <div className="p-3.5 rounded-2xl bg-[#E8F8F2] border border-[#B6EAD5] text-[#008F66] text-xs font-bold flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 shrink-0" />
               <span>Admin records updated successfully.</span>
             </div>
           )}
 
           {errorMessage && (
-            <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
+            <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMessage}</span>
             </div>
           )}
 
-          <div className="flex items-center gap-4 pb-4 border-b border-slate-800">
-            <div className="w-14 h-14 rounded-full bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center text-emerald-300 text-lg font-bold">
+          <div className="flex items-center gap-4 pb-4 border-b border-slate-200">
+            <div className="w-14 h-14 rounded-2xl bg-[#E8F8F2] border border-[#B6EAD5] flex items-center justify-center text-[#008F66] text-lg font-black">
               {initials}
             </div>
             <div>
-              <h2 className="text-base font-bold text-white">{profile.name}</h2>
-              <span className="text-xs text-emerald-400 font-medium">{profile.role}</span>
+              <h2 className="text-base font-black text-slate-900">{profile.name}</h2>
+              <span className="text-xs text-[#008F66] font-bold">{profile.role}</span>
             </div>
           </div>
 
@@ -184,8 +184,8 @@ export default function AdminProfilePage() {
             }
           />
 
-          <div className="pt-4 border-t border-slate-800 flex justify-end">
-            <Button type="submit" size="md" disabled={isSaving} className="gap-2 text-xs">
+          <div className="pt-4 border-t border-slate-200 flex justify-end">
+            <Button type="submit" size="md" disabled={isSaving} className="gap-2 text-xs font-black">
               {isSaving ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />

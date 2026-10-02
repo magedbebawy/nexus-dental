@@ -31,7 +31,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
         {label && (
           <label
             htmlFor={selectId}
-            className="block text-xs font-medium text-slate-300 tracking-wide uppercase"
+            className="block text-xs font-bold text-slate-700 tracking-wide uppercase"
           >
             {label}
           </label>
@@ -40,26 +40,26 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
           id={selectId}
           ref={ref}
           className={cn(
-            "w-full rounded-lg bg-[#0c1425] border border-slate-700/80 px-3.5 py-2.5 text-sm text-white",
-            "transition-all duration-200 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/50",
-            "disabled:opacity-50 disabled:bg-slate-900/40 disabled:cursor-not-allowed",
-            error && "border-rose-500/70 focus:border-rose-500 focus:ring-rose-500/30",
+            "w-full rounded-xl bg-white border border-slate-300 px-4 py-2.5 text-sm text-slate-900 shadow-xs cursor-pointer",
+            "transition-all duration-200 focus:outline-none focus:border-[#00C48C] focus:ring-2 focus:ring-[#00C48C]/20",
+            "disabled:opacity-50 disabled:bg-slate-50 disabled:cursor-not-allowed",
+            error && "border-rose-400 focus:border-rose-500 focus:ring-rose-200",
             className
           )}
           {...props}
         >
           {options
             ? options.map((opt) => (
-                <option key={opt.value} value={opt.value} className="bg-[#0b1329] text-white">
+                <option key={opt.value} value={opt.value} className="bg-white text-slate-900">
                   {opt.label}
                 </option>
               ))
             : children}
         </select>
         {helperText && !error && (
-          <p className="text-xs text-slate-400">{helperText}</p>
+          <p className="text-xs text-slate-500">{helperText}</p>
         )}
-        {error && <p className="text-xs text-rose-400 font-medium">{error}</p>}
+        {error && <p className="text-xs text-rose-500 font-semibold">{error}</p>}
       </div>
     );
   }

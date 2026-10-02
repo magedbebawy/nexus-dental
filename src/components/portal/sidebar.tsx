@@ -15,6 +15,7 @@ import {
   Menu,
   X,
   ShieldAlert,
+  Receipt,
 } from "lucide-react";
 import { NexusLogo } from "@/components/ui/nexus-logo";
 import { cn } from "@/lib/utils";
@@ -49,6 +50,7 @@ export function PortalSidebar({ role, userName, userEmail }: SidebarProps) {
     customer: [
       { name: "My Cases", href: "/dashboard/customer", icon: FolderKanban },
       { name: "New Case", href: "/dashboard/customer/new", icon: FolderPlus },
+      { name: "Invoices & Billing", href: "/dashboard/customer/invoices", icon: Receipt },
       { name: "Profile", href: "/dashboard/customer/profile", icon: User },
     ],
     designer: [
@@ -59,6 +61,7 @@ export function PortalSidebar({ role, userName, userEmail }: SidebarProps) {
     admin: [
       { name: "Dashboard", href: "/dashboard/admin", icon: LayoutDashboard },
       { name: "All Cases", href: "/dashboard/admin/cases", icon: FolderKanban },
+      { name: "Billing & Invoices", href: "/dashboard/admin/invoices", icon: Receipt },
       { name: "Customers", href: "/dashboard/admin/customers", icon: Users },
       { name: "Designers", href: "/dashboard/admin/designers", icon: Palette },
       { name: "Profile", href: "/dashboard/admin/profile", icon: User },
@@ -68,21 +71,21 @@ export function PortalSidebar({ role, userName, userEmail }: SidebarProps) {
   const roleLabel = BRAND.portalRoles[role] || "User";
 
   const navContent = (
-    <div className="flex flex-col h-full bg-[#090e1c] border-r border-slate-800 text-slate-300">
+    <div className="flex flex-col h-full bg-white border-r border-slate-200 text-slate-700">
       {/* Brand Header */}
-      <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
+      <div className="p-5 border-b border-slate-200 flex items-center justify-between">
         <NexusLogo href={`/dashboard/${role}`} roleBadge={roleLabel} />
         <button
           onClick={() => setMobileOpen(false)}
-          className="lg:hidden p-1.5 text-slate-400 hover:text-white rounded-lg"
+          className="lg:hidden p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100"
         >
           <X className="w-5 h-5" />
         </button>
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex-1 px-3 py-5 space-y-1.5 overflow-y-auto">
-        <p className="px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-2">
+      <nav className="flex-1 px-3 py-5 space-y-1 overflow-y-auto">
+        <p className="px-3 text-[11px] font-black uppercase tracking-wider text-slate-400 mb-2">
           {roleLabel} Portal
         </p>
         {navItems.map((item) => {
@@ -97,13 +100,13 @@ export function PortalSidebar({ role, userName, userEmail }: SidebarProps) {
               href={item.href}
               onClick={() => setMobileOpen(false)}
               className={cn(
-                "flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150",
+                "flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-bold transition-all duration-150",
                 isActive
-                  ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/25 shadow-sm shadow-cyan-500/10"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/60"
+                  ? "bg-[#E8F8F2] text-[#008F66] border border-[#B6EAD5] shadow-xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-100/70"
               )}
             >
-              <Icon className={cn("w-4 h-4 shrink-0", isActive ? "text-cyan-400" : "text-slate-400")} />
+              <Icon className={cn("w-4 h-4 shrink-0", isActive ? "text-[#00C48C]" : "text-slate-400")} />
               <span>{item.name}</span>
             </Link>
           );
@@ -111,21 +114,21 @@ export function PortalSidebar({ role, userName, userEmail }: SidebarProps) {
       </nav>
 
       {/* User Profile & Logout Bottom Bar */}
-      <div className="p-4 border-t border-slate-800/80 bg-[#070b16]">
+      <div className="p-4 border-t border-slate-200 bg-[#F8FAF9]">
         <div className="flex items-center gap-3 mb-3 px-1">
-          <div className="w-8 h-8 rounded-full bg-cyan-500/20 border border-cyan-500/30 flex items-center justify-center text-cyan-300 text-xs font-bold uppercase">
+          <div className="w-8 h-8 rounded-full bg-[#E8F8F2] border border-[#B6EAD5] flex items-center justify-center text-[#008F66] text-xs font-black uppercase">
             {userName ? userName.charAt(0) : "U"}
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-white truncate">{userName || "User"}</p>
-            <p className="text-[11px] text-slate-400 truncate">{userEmail}</p>
+            <p className="text-xs font-bold text-slate-900 truncate">{userName || "User"}</p>
+            <p className="text-[11px] text-slate-500 truncate">{userEmail}</p>
           </div>
         </div>
 
         <button
           onClick={handleLogout}
           disabled={isLoggingOut}
-          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-all duration-150 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-rose-600 hover:bg-rose-50 border border-slate-200 transition-all duration-150 cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5" />
           <span>{isLoggingOut ? "Logging out..." : "Sign Out"}</span>
@@ -137,11 +140,11 @@ export function PortalSidebar({ role, userName, userEmail }: SidebarProps) {
   return (
     <>
       {/* Mobile Hamburger Header */}
-      <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-[#090e1c] border-b border-slate-800">
+      <div className="lg:hidden sticky top-0 z-40 flex items-center justify-between px-4 py-3 bg-white border-b border-slate-200">
         <NexusLogo href={`/dashboard/${role}`} roleBadge={roleLabel} />
         <button
           onClick={() => setMobileOpen(true)}
-          className="p-2 text-slate-300 hover:text-white rounded-lg hover:bg-slate-800"
+          className="p-2 text-slate-700 hover:text-slate-900 rounded-lg hover:bg-slate-100"
           aria-label="Open menu"
         >
           <Menu className="w-5 h-5" />
@@ -152,10 +155,10 @@ export function PortalSidebar({ role, userName, userEmail }: SidebarProps) {
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-50 flex">
           <div
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="relative w-72 max-w-[80vw] h-full shadow-2xl z-10">
+          <div className="relative w-72 max-w-[80vw] h-full shadow-2xl z-10 bg-white">
             {navContent}
           </div>
         </div>

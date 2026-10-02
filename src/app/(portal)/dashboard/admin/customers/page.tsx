@@ -55,58 +55,58 @@ export default function AdminCustomersPage() {
         />
       </div>
 
-      {/* Customers Table */}
+      {/* Customers Table - Mint Mobile Clean Style */}
       {isLoading ? (
         <div className="p-12 text-center text-slate-400 text-sm">
           Loading customer directory...
         </div>
       ) : filtered.length === 0 ? (
-        <div className="p-12 text-center rounded-xl border border-slate-800 bg-[#090e1c] text-slate-400 text-sm">
+        <div className="p-12 text-center rounded-2xl border border-slate-200 bg-white text-slate-500 text-sm">
           No customer accounts found matching &ldquo;{searchTerm}&rdquo;.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-800 bg-[#090e1c]/80 shadow-xl">
+        <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-xs">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-800 bg-[#070b16] text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <thead className="border-b border-slate-200 bg-slate-50 text-[11px] font-black uppercase tracking-wider text-slate-500">
               <tr>
-                <th className="px-5 py-3.5">Doctor / Practice Name</th>
-                <th className="px-5 py-3.5">Email Address</th>
-                <th className="px-5 py-3.5">Phone Number</th>
-                <th className="px-5 py-3.5">Member Since</th>
+                <th className="px-6 py-4">Doctor / Practice Name</th>
+                <th className="px-6 py-4">Email Address</th>
+                <th className="px-6 py-4">Phone Number</th>
+                <th className="px-6 py-4">Member Since</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/80 text-slate-300">
+            <tbody className="divide-y divide-slate-100 text-slate-700">
               {filtered.map((customer) => (
-                <tr key={customer.id} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="px-5 py-4 font-semibold text-white">
+                <tr key={customer.id} className="hover:bg-slate-50/80 transition-colors">
+                  <td className="px-6 py-4 font-bold text-slate-900">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-xs font-bold">
+                      <div className="w-8 h-8 rounded-full bg-[#E8F8F2] text-[#008F66] border border-[#B6EAD5] flex items-center justify-center text-xs font-black">
                         {customer.name.charAt(0)}
                       </div>
                       <span>{customer.name}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-slate-300">
+                  <td className="px-6 py-4 text-slate-600">
                     <a
                       href={`mailto:${customer.email}`}
-                      className="hover:text-cyan-400 inline-flex items-center gap-1.5"
+                      className="hover:text-[#00C48C] inline-flex items-center gap-1.5 font-medium transition-colors"
                     >
-                      <Mail className="w-3.5 h-3.5 text-slate-500" />
+                      <Mail className="w-3.5 h-3.5 text-slate-400" />
                       <span>{customer.email}</span>
                     </a>
                   </td>
-                  <td className="px-5 py-4 text-slate-300">
+                  <td className="px-6 py-4 text-slate-600">
                     <a
                       href={`tel:${customer.phone_number}`}
-                      className="hover:text-cyan-400 inline-flex items-center gap-1.5"
+                      className="hover:text-[#00C48C] inline-flex items-center gap-1.5 font-medium transition-colors"
                     >
-                      <Phone className="w-3.5 h-3.5 text-slate-500" />
+                      <Phone className="w-3.5 h-3.5 text-slate-400" />
                       <span>{customer.phone_number || "Not provided"}</span>
                     </a>
                   </td>
-                  <td className="px-5 py-4 text-xs text-slate-400">
+                  <td className="px-6 py-4 text-xs text-slate-500 font-medium">
                     <div className="flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-slate-500" />
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
                       <span>{formatDate(customer.created_at)}</span>
                     </div>
                   </td>

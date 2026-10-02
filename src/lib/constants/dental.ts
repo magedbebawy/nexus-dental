@@ -2,72 +2,90 @@ export const DENTAL_SERVICES = [
   {
     id: "crown-and-bridge",
     name: "Crown & Bridge",
+    unitPrice: 6,
     turnaround: "24 hours",
-    description: "High-precision monolithic zirconia, e.max, and multi-unit bridge CAD designs.",
+    description: "High-precision monolithic zirconia, e.max, and bridge designs (includes model).",
+    includesModel: true,
   },
   {
-    id: "implant",
-    name: "Implant",
-    turnaround: "48 hours",
-    description: "Custom titanium abutments, screw-retained crowns, and implant bridge frameworks.",
+    id: "model-only",
+    name: "Model Only",
+    unitPrice: 6,
+    turnaround: "24 hours",
+    description: "Digital hollow/solid dental model design with ditching and articulate bases.",
+    includesModel: true,
   },
   {
-    id: "denture",
-    name: "Denture",
-    turnaround: "48-72 hours",
-    description: "Digital full arches, try-ins, and printed or milled denture base designs.",
-  },
-  {
-    id: "partial",
-    name: "Partial",
-    turnaround: "48-72 hours",
-    description: "Laser-sintered or castable partial framework designs with optimized retentive clasping.",
+    id: "diagnostic-wax-up",
+    name: "Diagnostic Wax-Up",
+    unitPrice: 11,
+    turnaround: "24-48 hours",
+    description: "2D to 3D diagnostic wax-up and aesthetic pre-visualization smile design.",
+    includesModel: false,
   },
   {
     id: "night-guard",
     name: "Night Guard",
+    unitPrice: 15,
     turnaround: "24 hours",
-    description: "Hard/soft splints, flat-plane splints, and anterior deprogrammers calibrated to patient occlusal scans.",
+    description: "Hard/soft splints, flat-plane splints, and occlusal deprogrammers.",
+    includesModel: false,
   },
   {
-    id: "surgical-guide",
-    name: "Surgical Guide",
+    id: "screw-retained",
+    name: "Screw Retained",
+    unitPrice: 18,
     turnaround: "48 hours",
-    description: "CBCT-fused surgical guides with precise sleeve offsets and bone/tooth supported stability.",
+    description: "Screw-retained crown and implant bridge restorations (includes model).",
+    includesModel: true,
   },
   {
-    id: "smile-design",
-    name: "Smile Design",
-    turnaround: "24-48 hours",
-    description: "2D to 3D diagnostic wax-ups and esthetic pre-visualization cases.",
+    id: "custom-abutment",
+    name: "Custom Abutment",
+    unitPrice: 21,
+    turnaround: "48 hours",
+    description: "Custom titanium and hybrid zirconia abutments with emergence profile (includes model).",
+    includesModel: true,
   },
   {
-    id: "full-arch",
-    name: "Full Arch",
-    turnaround: "3-4 days",
-    description: "All-on-X full-arch provisional and definitive titanium-zirconia restorative designs.",
+    id: "denture-or-partial",
+    name: "Denture or Partial",
+    unitPrice: 30,
+    turnaround: "48-72 hours",
+    description: "Digital full arches, try-ins, and laser-sintered/castable partial framework designs.",
+    includesModel: false,
   },
 ] as const;
 
 export type DentalServiceName = (typeof DENTAL_SERVICES)[number]["name"];
 
+export function getServiceByName(name: string) {
+  return DENTAL_SERVICES.find((s) => s.name.toLowerCase() === name.toLowerCase()) || DENTAL_SERVICES[0];
+}
+
+export function calculateCasePrice(serviceName: string, units: number = 1): number {
+  const service = getServiceByName(serviceName);
+  const count = Math.max(1, Number(units) || 1);
+  return service.unitPrice * count;
+}
+
 export const CASE_STATUS_CONFIG = {
   uploaded: {
     label: "Uploaded",
-    color: "bg-amber-500/10 text-amber-400 border-amber-500/30",
-    dot: "bg-amber-400",
+    color: "bg-amber-50 text-amber-800 border-amber-200",
+    dot: "bg-amber-500",
     description: "Case submitted and pending designer assignment",
   },
   assigned: {
     label: "Assigned",
-    color: "bg-sky-500/10 text-sky-400 border-sky-500/30",
-    dot: "bg-sky-400",
+    color: "bg-sky-50 text-sky-800 border-sky-200",
+    dot: "bg-sky-500",
     description: "CAD designer assigned and currently designing",
   },
   done: {
     label: "Done",
-    color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/30",
-    dot: "bg-emerald-400",
+    color: "bg-[#E8F8F2] text-[#008F66] border-[#B6EAD5]",
+    dot: "bg-[#00C48C]",
     description: "Design completed and ready for download",
   },
 } as const;

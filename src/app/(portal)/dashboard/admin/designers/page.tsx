@@ -78,62 +78,62 @@ export default function AdminDesignersPage() {
         }
       />
 
-      {/* Designers Table */}
+      {/* Designers Table - Mint Mobile Clean Style */}
       {isLoading ? (
         <div className="p-12 text-center text-slate-400 text-sm">
           Loading CAD technicians...
         </div>
       ) : designers.length === 0 ? (
-        <div className="p-12 text-center rounded-xl border border-slate-800 bg-[#090e1c] text-slate-400 text-sm">
+        <div className="p-12 text-center rounded-2xl border border-slate-200 bg-white text-slate-500 text-sm">
           No designer accounts currently registered.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-slate-800 bg-[#090e1c]/80 shadow-xl">
+        <div className="overflow-x-auto rounded-3xl border border-slate-200 bg-white shadow-xs">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-slate-800 bg-[#070b16] text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+            <thead className="border-b border-slate-200 bg-slate-50 text-[11px] font-black uppercase tracking-wider text-slate-500">
               <tr>
-                <th className="px-5 py-3.5">Technician Name</th>
-                <th className="px-5 py-3.5">Internal Email</th>
-                <th className="px-5 py-3.5">Contact Number</th>
-                <th className="px-5 py-3.5">Role Designation</th>
-                <th className="px-5 py-3.5">Joined</th>
+                <th className="px-6 py-4">Technician Name</th>
+                <th className="px-6 py-4">Internal Email</th>
+                <th className="px-6 py-4">Contact Number</th>
+                <th className="px-6 py-4">Role Designation</th>
+                <th className="px-6 py-4">Joined</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/80 text-slate-300">
+            <tbody className="divide-y divide-slate-100 text-slate-700">
               {designers.map((designer) => (
-                <tr key={designer.id} className="hover:bg-slate-800/40 transition-colors">
-                  <td className="px-5 py-4 font-semibold text-white">
+                <tr key={designer.id} className="hover:bg-slate-50/80 transition-colors">
+                  <td className="px-6 py-4 font-bold text-slate-900">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-cyan-500/20 text-cyan-300 flex items-center justify-center text-xs font-bold">
+                      <div className="w-8 h-8 rounded-full bg-[#E8F8F2] text-[#008F66] border border-[#B6EAD5] flex items-center justify-center text-xs font-black">
                         {designer.name.charAt(0)}
                       </div>
                       <span>{designer.name}</span>
                     </div>
                   </td>
-                  <td className="px-5 py-4 text-slate-300">
+                  <td className="px-6 py-4 text-slate-600">
                     <a
                       href={`mailto:${designer.email}`}
-                      className="hover:text-cyan-400 inline-flex items-center gap-1.5"
+                      className="hover:text-[#00C48C] inline-flex items-center gap-1.5 font-medium transition-colors"
                     >
-                      <Mail className="w-3.5 h-3.5 text-slate-500" />
+                      <Mail className="w-3.5 h-3.5 text-slate-400" />
                       <span>{designer.email}</span>
                     </a>
                   </td>
-                  <td className="px-5 py-4 text-slate-300">
+                  <td className="px-6 py-4 text-slate-600">
                     <a
                       href={`tel:${designer.phone_number}`}
-                      className="hover:text-cyan-400 inline-flex items-center gap-1.5"
+                      className="hover:text-[#00C48C] inline-flex items-center gap-1.5 font-medium transition-colors"
                     >
-                      <Phone className="w-3.5 h-3.5 text-slate-500" />
+                      <Phone className="w-3.5 h-3.5 text-slate-400" />
                       <span>{designer.phone_number || "951-334-8942"}</span>
                     </a>
                   </td>
-                  <td className="px-5 py-4">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-cyan-500/10 text-cyan-400 border border-cyan-500/25">
+                  <td className="px-6 py-4">
+                    <span className="px-3 py-1 rounded-full text-xs font-black bg-[#E8F8F2] text-[#008F66] border border-[#B6EAD5]">
                       CAD Specialist
                     </span>
                   </td>
-                  <td className="px-5 py-4 text-xs text-slate-400">
+                  <td className="px-6 py-4 text-xs text-slate-500 font-medium">
                     {formatDate(designer.created_at)}
                   </td>
                 </tr>
@@ -189,7 +189,7 @@ export default function AdminDesignersPage() {
             }
           />
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200">
             <Button
               type="button"
               variant="ghost"

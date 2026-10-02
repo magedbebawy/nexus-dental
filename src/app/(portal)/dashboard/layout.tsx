@@ -4,7 +4,7 @@ export default function PortalRootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="min-h-screen bg-[#070c18] text-slate-100 antialiased">
+    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 antialiased">
       {children}
     </div>
   );

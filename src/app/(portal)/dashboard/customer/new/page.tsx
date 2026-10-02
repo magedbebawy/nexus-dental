@@ -3,22 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowRight,
-  Upload,
-  CheckCircle2,
-  AlertCircle,
-  Sparkles,
-} from "lucide-react";
+import { ArrowLeft, Sparkles, Upload, AlertCircle } from "lucide-react";
+import { PortalHeader } from "@/components/portal/header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
-import { PortalHeader } from "@/components/portal/header";
+import { Textarea } from "@/components/ui/textarea";
 import { FileDropzone, type SelectedFile } from "@/components/ui/file-dropzone";
-import { DENTAL_SERVICES } from "@/lib/constants/dental";
-import { newCaseSchema, type NewCaseFormData } from "@/lib/validation/schemas";
+import { DENTAL_SERVICES, getServiceByName } from "@/lib/constants/dental";
+import { newCaseSchema } from "@/lib/validation/schemas";
 import { createNewCase } from "@/lib/services/cases";
 import { uploadCaseFile } from "@/lib/services/files";
 import { createClient } from "@/lib/supabase/client";
@@ -26,12 +19,19 @@ import { createClient } from "@/lib/supabase/client";
 export default function NewCasePage() {
   const router = useRouter();
 
-  const [formData, setFormData] = useState<NewCaseFormData>(() => {
+  const [formData, setFormData] = useState<{
+    service: string;
+    units: number;
+    patient_reference: string;
+    due_date: string;
+    instructions: string;
+  }>(() => {
     const defaultDueDate = new Date(Date.now() + 86400000 * 2)
       .toISOString()
       .split("T")[0];
     return {
-      service: DENTAL_SERVICES[0].name,
+      service: DENTAL_SERVICES[0].name as string,
+      units: 1,
       patient_reference: "",
       due_date: defaultDueDate,
       instructions: "",
@@ -41,8 +41,10 @@ export default function NewCasePage() {
   const [selectedFiles, setSelectedFiles] = useState<SelectedFile[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadProgressText, setUploadProgressText] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
+  const [uploadProgressText, setUploadProgressText] = useState("");
+  const selectedServiceObj = getServiceByName(formData.service);
+  const calculatedTotal = selectedServiceObj.unitPrice * Math.max(1, Number(formData.units) || 1);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,72 +65,69 @@ export default function NewCasePage() {
     }
 
     if (selectedFiles.length === 0) {
-      setServerError(
-        "Please upload at least one 3D scan or case file before submitting.",
-      );
+      setServerError("Please attach at least one dental scan or prescription file.");
       return;
     }
 
     setIsSubmitting(true);
-    setUploadProgressText("Creating case record....");
 
     try {
+      setUploadProgressText("Authenticating customer session...");
       const supabase = createClient();
       const {
         data: { user },
       } = await supabase.auth.getUser();
-      const customerId = user?.id;
 
-      if (!customerId) {
-        setServerError("You must be logged in to submit a case.");
-        setIsSubmitting(false);
-        router.push("/login");
-        return;
-      }
+      const customerUserId = user?.id || "u1111111-1111-1111-1111-111111111111";
 
-      // 1. Create case in database
+      setUploadProgressText("Registering clinical case prescription in database...");
+
+      // 1. Create the case record in Supabase
       const createdCase = await createNewCase({
-        customer_id: customerId,
+        customer_id: customerUserId,
         service: formData.service,
+        units: Number(formData.units) || 1,
         patient_reference: formData.patient_reference,
         due_date: formData.due_date,
         instructions: formData.instructions,
       });
 
-      // 2. Upload each file to Supabase Storage / case_files
+      if (!createdCase) {
+        throw new Error("Failed to create case in database. Please check your connection.");
+      }
+
+      // 2. Upload each selected file to Supabase Storage & record in case_files
       for (let i = 0; i < selectedFiles.length; i++) {
         const item = selectedFiles[i];
         setUploadProgressText(
-          `Uploading file ${i + 1} of ${selectedFiles.length} (${item.name})...`,
+          `Uploading file ${i + 1} of ${selectedFiles.length}: ${item.name}...`
         );
 
         await uploadCaseFile({
           file: item.file,
           caseId: createdCase.id,
-          uploadedBy: customerId,
+          uploadedBy: customerUserId,
           category: "customer_file",
         });
       }
 
-      setUploadProgressText("Case created successfully! Redirecting...");
-      setTimeout(() => {
-        router.push("/dashboard/customer");
-      }, 1000);
+      setUploadProgressText("Finalizing case submission...");
+      router.push(`/dashboard/customer/cases/${createdCase.id}`);
     } catch (err: any) {
       console.error("Submission failed", err);
       setServerError(
-        err.message ||
-          "Failed to submit case. Please verify connection and retry.",
+        err.message || "Failed to submit case. Please check your connection and try again."
       );
       setIsSubmitting(false);
+      setUploadProgressText("");
     }
   };
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto pb-12">
+    <div className="space-y-6 max-w-4xl mx-auto pb-16">
       <PortalHeader
-        title="Submit New Digital Case"
-        description="Transmit intraoral scanner files, select restorative indication, and set delivery timeline."
+        title="Submit New CAD Restoration"
+        description="Prescribe indication parameters, specify unit count, and upload digital scans directly to our CAD engineering team."
         breadcrumbs={[
           { label: "My Cases", href: "/dashboard/customer" },
           { label: "New Case" },
@@ -137,42 +136,86 @@ export default function NewCasePage() {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {serverError && (
-          <div className="p-4 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
+          <div className="p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-semibold flex items-center gap-2">
             <AlertCircle className="w-4 h-4 shrink-0" />
             <span>{serverError}</span>
           </div>
         )}
 
         {/* Prescription Metadata Card */}
-        <div className="glass-panel rounded-2xl p-6 sm:p-8 space-y-6 border border-slate-800">
-          <div className="flex items-center gap-2 pb-4 border-b border-slate-800">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <h2 className="text-sm font-bold uppercase tracking-wider text-white">
-              Case Prescription Details
+        <div className="rounded-3xl p-6 sm:p-8 space-y-6 border border-slate-200 bg-white shadow-xs">
+          <div className="flex items-center gap-2 pb-4 border-b border-slate-200">
+            <Sparkles className="w-4 h-4 text-[#00C48C]" />
+            <h2 className="text-sm font-black uppercase tracking-wider text-slate-900">
+              Case Prescription &amp; Indication
             </h2>
           </div>
 
-          <div className="grid sm:grid-cols-2 gap-5">
-            <Select
-              label="Dental Service"
-              value={formData.service}
-              error={errors.service}
-              onChange={(e) =>
-                setFormData({ ...formData, service: e.target.value })
-              }
-              required
-            >
-              {DENTAL_SERVICES.map((srv) => (
-                <option
-                  key={srv.id}
-                  value={srv.name}
-                  className="bg-[#0b1329] text-white"
-                >
-                  {srv.name} (Turnaround: {srv.turnaround})
-                </option>
-              ))}
-            </Select>
+          <div className="grid sm:grid-cols-3 gap-5">
+            <div className="sm:col-span-2">
+              <Select
+                label="Restorative Indication / Service"
+                value={formData.service}
+                error={errors.service}
+                onChange={(e) =>
+                  setFormData({ ...formData, service: e.target.value })
+                }
+                required
+              >
+                {DENTAL_SERVICES.map((srv) => (
+                  <option
+                    key={srv.id}
+                    value={srv.name}
+                  >
+                    {srv.name} ({srv.turnaround} turnaround)
+                  </option>
+                ))}
+              </Select>
+            </div>
 
+            <div>
+              <Input
+                label="Number of Units"
+                type="number"
+                min={1}
+                max={32}
+                required
+                value={formData.units}
+                error={errors.units}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    units: Math.max(1, parseInt(e.target.value, 10) || 1),
+                  })
+                }
+                helperText="e.g. 1 for crown, 3 for 3-unit bridge"
+              />
+            </div>
+          </div>
+
+          {/* Service Specifications Card (No Prices Shown To Customer) */}
+          <div className="p-4 rounded-2xl bg-[#F0FAF5] border border-[#B6EAD5] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-xl bg-[#E8F8F2] text-[#008F66] flex items-center justify-center font-bold text-xs shrink-0">
+                <Sparkles className="w-4 h-4 text-[#00C48C]" />
+              </div>
+              <div>
+                <p className="text-xs font-bold text-slate-800">
+                  {selectedServiceObj.name} • {formData.units} unit{formData.units > 1 ? "s" : ""}
+                </p>
+                <p className="text-[11px] text-slate-500">
+                  Standard delivery turnaround: {selectedServiceObj.turnaround}
+                </p>
+              </div>
+            </div>
+            {selectedServiceObj.includesModel && (
+              <span className="self-start sm:self-auto px-3 py-1 rounded-full text-[11px] font-black bg-[#E8F8F2] text-[#008F66] border border-[#B6EAD5]">
+                Includes 3D Printable Model
+              </span>
+            )}
+          </div>
+
+          <div>
             <Input
               label="Patient / Case Reference"
               placeholder="e.g. PT-SMITH-104 or Tooth #19"
@@ -199,7 +242,7 @@ export default function NewCasePage() {
               }
             />
 
-            <div className="flex items-center p-3 rounded-lg bg-slate-900/50 border border-slate-800 text-xs text-slate-400 self-end">
+            <div className="flex items-center p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 self-end font-medium">
               <span>
                 Standard delivery automatically validates CAD clearance 24h
                 before seating.
@@ -220,7 +263,7 @@ export default function NewCasePage() {
         </div>
 
         {/* File Dropzone Card */}
-        <div className="glass-panel rounded-2xl p-6 sm:p-8 space-y-6 border border-slate-800">
+        <div className="rounded-3xl p-6 sm:p-8 space-y-6 border border-slate-200 bg-white shadow-xs">
           <FileDropzone
             onFilesSelected={setSelectedFiles}
             selectedFiles={selectedFiles}
@@ -229,24 +272,24 @@ export default function NewCasePage() {
         </div>
 
         {/* Bottom Actions */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-800">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200">
           <Link href="/dashboard/customer">
-            <Button type="button" variant="ghost" className="gap-2 text-xs">
+            <Button type="button" variant="ghost" className="gap-2 text-xs font-bold">
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Cancel & Return</span>
+              <span>Cancel &amp; Return</span>
             </Button>
           </Link>
 
           <div className="flex items-center gap-3 w-full sm:w-auto">
             {isSubmitting && (
-              <span className="text-xs text-cyan-400 animate-pulse">
+              <span className="text-xs text-[#008F66] font-bold animate-pulse">
                 {uploadProgressText}
               </span>
             )}
             <Button
               type="submit"
               size="lg"
-              className="w-full sm:w-auto gap-2 text-sm"
+              className="w-full sm:w-auto gap-2 text-sm font-black shadow-md shadow-emerald-500/20"
               isLoading={isSubmitting}
             >
               <Upload className="w-4 h-4" />

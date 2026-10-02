@@ -21,7 +21,7 @@ export default function ForgotPasswordPage() {
     try {
       const supabase = createClient();
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: `${window.location.origin}/auth/callback?next=/reset-password`,
       });
 
       if (error && !error.message.includes("fetch")) {
@@ -39,31 +39,31 @@ export default function ForgotPasswordPage() {
 
   return (
     <div className="py-12 sm:py-16 flex items-center justify-center px-4">
-      <div className="w-full max-w-md glass-panel rounded-2xl p-6 sm:p-8 border border-slate-800 shadow-2xl">
+      <div className="w-full max-w-md rounded-3xl p-6 sm:p-8 border border-slate-200 bg-white shadow-xl">
         <div className="text-center space-y-2 mb-6">
-          <span className="text-xs font-bold uppercase tracking-widest text-cyan-400">
+          <span className="text-xs font-black uppercase tracking-widest text-[#008F66]">
             Account Recovery
           </span>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">
             Forgot Password
           </h1>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-500">
             Enter your practice email to receive a password reset link.
           </p>
         </div>
 
         {submitted ? (
           <div className="text-center py-6 space-y-3">
-            <div className="w-12 h-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mx-auto">
-              <CheckCircle2 className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-[#E8F8F2] border border-[#B6EAD5] flex items-center justify-center text-[#008F66] mx-auto">
+              <CheckCircle2 className="w-7 h-7 text-[#00C48C]" />
             </div>
-            <h3 className="text-base font-bold text-white">Reset Link Sent</h3>
-            <p className="text-xs text-slate-400">
+            <h3 className="text-base font-black text-slate-900">Reset Link Sent</h3>
+            <p className="text-xs text-slate-500">
               If an account exists for {email}, a recovery email has been dispatched.
             </p>
             <div className="pt-4">
               <Link href="/login">
-                <Button variant="outline" size="sm" className="w-full">
+                <Button variant="outline" size="sm" className="w-full font-bold">
                   Return to Sign In
                 </Button>
               </Link>
@@ -72,7 +72,7 @@ export default function ForgotPasswordPage() {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/30 text-rose-400 text-xs flex items-center gap-2">
+              <div className="p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-rose-600 text-xs font-bold flex items-center gap-2">
                 <AlertCircle className="w-4 h-4 shrink-0" />
                 <span>{error}</span>
               </div>
@@ -90,17 +90,17 @@ export default function ForgotPasswordPage() {
             <Button
               type="submit"
               size="lg"
-              className="w-full gap-2 text-sm mt-2"
+              className="w-full gap-2 text-sm mt-2 font-black"
               isLoading={isLoading}
             >
               <Send className="w-4 h-4" />
               <span>Send Recovery Link</span>
             </Button>
 
-            <div className="pt-4 border-t border-slate-800 text-center">
+            <div className="pt-4 border-t border-slate-200 text-center">
               <Link
                 href="/login"
-                className="inline-flex items-center gap-1 text-xs text-slate-400 hover:text-white"
+                className="inline-flex items-center gap-1 text-xs text-slate-600 hover:text-slate-900 font-bold"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
                 <span>Back to Sign In</span>
